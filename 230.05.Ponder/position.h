@@ -43,7 +43,6 @@ public:
 
    bool operator == (const Position& rhs) const
    {
-
       return rhs.getX() == x && rhs.getY() == y;
    }
 
@@ -86,4 +85,3 @@ private:
    double x;           // horizontal position
    double y;           // vertical position
 };
-

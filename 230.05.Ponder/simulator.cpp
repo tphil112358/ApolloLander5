@@ -15,6 +15,17 @@
 #include <array>
 #include <iostream>
 #include <random>
+#include "position.h"    // everything should have a point
+#include "angle.h"       // angle of the lander
+#include "uiInteract.h"  // for INTERFACE
+#include "uiDraw.h"      // for RANDOM and DRAW*
+#include "ground.h"      // for GROUND
+#include "test.h"        // for the unit tests
+#include <cmath>         // for SQRT
+#include <cassert>       // for ASSERT
+#include <array>
+#include <iostream>
+#include <random>
 using namespace std;
 
 
@@ -33,7 +44,6 @@ public:
 
    Angle a;
    Ground ground;
-   Star stars;
 };
 
 /**********************************************************
@@ -45,6 +55,7 @@ void Simulator::display()
    ogstream gout;
 
    // draw the stars
+   Star stars(400.0, 400.0);
    stars.draw(gout);
 
    // draw the ground

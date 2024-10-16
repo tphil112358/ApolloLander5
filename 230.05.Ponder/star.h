@@ -35,20 +35,6 @@ public:
       }
    }
 
-   void reset()
-   {
-      std::uniform_int_distribution<> killAStar(0, stars.size() - 1); // Random star index
-      std::mt19937 gen(rd()); // Random number generator
-
-      auto it = std::next(stars.begin(), killAStar(gen)); // Get a random star
-      std::uniform_real_distribution<> xDis(0.0, width); // Random x-coordinates
-      std::uniform_real_distribution<> yDis(0.0, height); // Random y-coordinates
-
-      // Reset star position and phase
-      it->first = Position(xDis(gen), yDis(gen));
-      it->second = 0; // Reset phase to 0
-   }
-
 private:
    std::map<Position, unsigned char> stars;
    std::random_device rd;
@@ -61,7 +47,7 @@ private:
       std::mt19937 gen(rd()); // Random number generator
       std::uniform_real_distribution<> xDis(0.0, width); // Random x-coordinates
       std::uniform_real_distribution<> yDis(0.0, height); // Random y-coordinates
-      std::uniform_int_distribution<> pDis(0, 225);      // Random phases
+      std::uniform_int_distribution<> pDis(0, 256);      // Random phases
 
       for (int i = 0; i < 50; ++i) // Generate 50 stars
       {
