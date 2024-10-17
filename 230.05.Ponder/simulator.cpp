@@ -9,23 +9,15 @@
 #include "uiDraw.h"      // for RANDOM and DRAW*
 #include "ground.h"      // for GROUND
 #include "test.h"        // for the unit tests
+#include <cmath>         // for SQRT
+#include <cassert>       // for ASSERT
+#include <array>
+#include <iostream>
+#include <random>
 #include "star.h"
-#include <cmath>         // for SQRT
-#include <cassert>       // for ASSERT
-#include <array>
-#include <iostream>
-#include <random>
-#include "position.h"    // everything should have a point
-#include "angle.h"       // angle of the lander
-#include "uiInteract.h"  // for INTERFACE
-#include "uiDraw.h"      // for RANDOM and DRAW*
-#include "ground.h"      // for GROUND
-#include "test.h"        // for the unit tests
-#include <cmath>         // for SQRT
-#include <cassert>       // for ASSERT
-#include <array>
-#include <iostream>
-#include <random>
+#include "thrust.h"
+#include "lander.h"
+#include "acceleration.h"
 using namespace std;
 
 
@@ -37,13 +29,17 @@ class Simulator
 {
 public:
    // set up the simulator
-   Simulator(const Position& posUpperRight) : ground(posUpperRight) {}
+   Simulator(const Position& posUpperRight) : ground(posUpperRight), stars(400.0, 400.0), posLander(100, 300), lander(posUpperRight) {}
 
    // display stuff on the screen
    void display();
 
    Angle a;
    Ground ground;
+   Star stars;
+   Position posLander;
+   Thrust thrust;
+   Lander lander;
 };
 
 /**********************************************************
@@ -55,14 +51,12 @@ void Simulator::display()
    ogstream gout;
 
    // draw the stars
-   Star stars(400.0, 400.0);
    stars.draw(gout);
 
    // draw the ground
    ground.draw(gout);
 
    // draw the lander
-   Position posLander(100, 300);
    gout.drawLander(posLander, a.getRadians());
 }
 
@@ -85,6 +79,13 @@ void callBack(const Interface* pUI, void* p)
       pSimulator->a.add(-0.1);   // Change the angle of the lander to rotate right
    if (pUI->isLeft())
       pSimulator->a.add(0.1);   // Chnage the angle of the lander to rotate left
+   if (pUI->isUp())
+      pSimulator->thrust.set(pUI);
+
+   //Test physics, this is not final code.
+   Acceleration acceleration(50.0, 50.0);
+   acceleration = (pSimulator->lander.input(pSimulator->thrust, -1.0));
+   pSimulator->lander.coast(acceleration, 0.3);
 }
 
 /*********************************
