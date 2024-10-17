@@ -10,6 +10,8 @@
 #include "lander.h"
 #include "acceleration.h"
 
+#include <math.h>  // for cos() and sin()
+
  /***************************************************************
   * RESET
   * Reset the lander and its position to start the game over
@@ -23,9 +25,7 @@ void Lander :: reset(const Position & posUpperRight)
  * DRAW
  * Draw the lander on the screen
  ***************************************************************/
-void Lander :: draw(const Thrust & thrust, ogstream & gout) const
-{
-}
+void Lander :: draw(const Thrust & thrust, ogstream & gout) const {}
 
 /***************************************************************
  * INPUT
@@ -33,8 +33,14 @@ void Lander :: draw(const Thrust & thrust, ogstream & gout) const
  ***************************************************************/
 Acceleration Lander :: input(const Thrust& thrust, double gravity)
 {
-   pos.setX(-99.9);
-   return Acceleration();
+   Acceleration a;
+   if (thrust.isMain() == true)
+   {
+      a.addDDX(thrust.mainEngineThrust() * sin(angle.getRadians()));
+      a.addDDY(thrust.mainEngineThrust() * cos(angle.getRadians()));
+   }
+   a.addDDY(gravity);
+   return a;
 }
 
 /******************************************************************
@@ -43,5 +49,5 @@ Acceleration Lander :: input(const Thrust& thrust, double gravity)
  *******************************************************************/
 void Lander :: coast(Acceleration & acceleration, double time)
 {
-   pos.setX(-99.9);
+   pos.add(acceleration, velocity, time);
 }
