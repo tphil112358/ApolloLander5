@@ -15,7 +15,7 @@
 #include "uiDraw.h"    // for DRAW* and RANDOM
 #include "angle.h"     // for ANGLE
 
-enum Status { PLAYING, SAFE, DEAD };
+enum Status {PLAYING, SAFE, DEAD};
 
 class TestLander;
 
@@ -26,23 +26,62 @@ class TestLander;
 class Lander
 {
    friend TestLander;
-   
+ 
 public:
-  // to create a lander, we need to know something about the board
-  Lander(const Position & posUpperRight) : status(DEAD), fuel(-99.0) {  }
+  Lander(const Position & posUpperRight) : status(PLAYING), fuel(1000.0) {}
 
   // reset the lander and its position
   void reset(const Position& posUpperRight);
 
   // get the status of the lander
-  bool     isDead()         const { return true; }
-  bool     isLanded()       const { return true; }
-  bool     isFlying()       const { return true; }
-  Position getPosition()    const { return pos;  }
-  double   getSpeed()       const { return 99.9; }
-  int      getFuel()        const { return -99;  }
-  int      getWidth()       const { return 99;   }
-  double   getMaxSpeed()    const { return 99.9; }
+  bool isDead() const
+  {
+     if (status == DEAD)
+        return true;
+     else
+        return false;
+  }
+
+  bool isLanded() const
+  {
+     if (status == SAFE)
+        return true;
+     else
+        return false;
+  }
+
+  bool isFlying() const
+  {
+     if (status == PLAYING)
+        return true;
+     else
+        return false;
+  }
+
+  Position getPosition() const
+  {
+     return pos;
+  }
+
+  double getSpeed() const
+  {
+     return velocity.getSpeed();
+  }
+
+  int getFuel() const
+  {
+     return fuel;
+  }
+
+  int getWidth() const
+  {
+     return 20;
+  }
+
+  double getMaxSpeed() const
+  {
+     return 4.0;
+  }
 
   // draw the lander on the screen
   void draw(const Thrust & thrust, ogstream & gout) const;
@@ -54,10 +93,20 @@ public:
   void coast(Acceleration & acceleration, double time);
 
   // straighten the lander and put it on the ground
-  void land()  {  }
+  void land()
+  {
+     angle = 0.0;
+     velocity.set(0.0, 0.0);
+     status = SAFE;
+  }
 
   // we are dead. Draw the lander upside down
-  void crash() {  }
+  void crash()
+  {
+     angle = M_PI;
+     velocity.set(M_PI, 0.0);
+     status = DEAD; // Stretch goal; insert Dark Souls 'YOU DIED' display code here
+  }
 
 private:
    Status   status;      // are we dead or not?
