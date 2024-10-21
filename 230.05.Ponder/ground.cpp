@@ -76,7 +76,7 @@ Ground::Ground(const Position & posUpperRight) : posUpperRight(posUpperRight)
 }
 
 /***********************************************************
- * HTI GROUND
+ * HIT GROUND
  * Did the lander hit the ground?
  **********************************************************/
 bool Ground::hitGround(const Position& pos, int landerWidth) const
@@ -106,11 +106,11 @@ bool Ground::hitGround(const Position& pos, int landerWidth) const
 bool Ground :: onPlatform(const Position & pos, int landerWidth) const
 {
    // not on the platform if we are too high
-   if (getElevation(pos) > 1.0)
+   if (getElevation(pos) > 5.0)
       return false;
 
    // not on the platform if we hit the ground
-   if (getElevation(pos) < 0.0)
+   if (getElevation(pos) < -5.0)
       return false;
 
    // not on the platform if we are too far left
@@ -140,5 +140,4 @@ void Ground::draw(ogstream & gout) const
    gout.drawRectangle(Position((double)iLZ, ground[iLZ]),
                       Position((double)(iLZ + LZ_SIZE), ground[iLZ] - 2.0),
                       0.0 /*red*/, 0.0 /*green*/, 1.0 /*blue*/);
-
 }
