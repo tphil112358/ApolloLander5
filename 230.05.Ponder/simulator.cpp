@@ -77,10 +77,23 @@ void callBack(const Interface* pUI, void* p)
    // handle input
    pSimulator->thrust.set(pUI);
 
-   //Test physics, this is not final code.
-   //Acceleration acceleration(50.0, 50.0);
+   // Run the physics
    Acceleration acceleration = (pSimulator->lander.input(pSimulator->thrust, -1.0));
    pSimulator->lander.coast(acceleration, 0.3);
+
+   //Check for impact
+   if (pSimulator->ground.hitGround(pSimulator->lander.getPosition(), pSimulator->lander.getWidth()) == true)
+   {
+      if (pSimulator->ground.onPlatform(pSimulator->lander.getPosition(), pSimulator->lander.getWidth()) == true)
+      {
+         if (pSimulator->lander.getSpeed() <= pSimulator->lander.getMaxSpeed())
+            pSimulator->lander.land();
+         else
+            pSimulator->lander.crash();
+      }
+      else
+         pSimulator->lander.crash();
+   }
 }
 
 /*********************************
