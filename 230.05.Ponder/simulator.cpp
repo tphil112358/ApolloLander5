@@ -29,7 +29,7 @@ class Simulator
 {
 public:
    // set up the simulator
-   Simulator(const Position& posUpperRight) : ground(posUpperRight), stars(400.0, 400.0), posLander(100, 300), lander(posUpperRight) {}
+   Simulator(const Position& posUpperRight) : ground(posUpperRight), stars(400.0, 400.0), lander(posUpperRight) {}
 
    // display stuff on the screen
    void display();
@@ -57,7 +57,7 @@ void Simulator::display()
    ground.draw(gout);
 
    // draw the lander
-   gout.drawLander(posLander, a.getRadians());
+   lander.draw(thrust,gout);
 }
 
 
@@ -75,16 +75,11 @@ void callBack(const Interface* pUI, void* p)
    pSimulator->display();
 
    // handle input
-   if (pUI->isRight())
-      pSimulator->a.add(-0.1);   // Change the angle of the lander to rotate right
-   if (pUI->isLeft())
-      pSimulator->a.add(0.1);   // Chnage the angle of the lander to rotate left
-   if (pUI->isUp())
-      pSimulator->thrust.set(pUI);
+   pSimulator->thrust.set(pUI);
 
    //Test physics, this is not final code.
-   Acceleration acceleration(50.0, 50.0);
-   acceleration = (pSimulator->lander.input(pSimulator->thrust, -1.0));
+   //Acceleration acceleration(50.0, 50.0);
+   Acceleration acceleration = (pSimulator->lander.input(pSimulator->thrust, -1.0));
    pSimulator->lander.coast(acceleration, 0.3);
 }
 
