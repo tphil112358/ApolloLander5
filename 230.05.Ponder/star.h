@@ -21,7 +21,7 @@
 class Star
 {
 public:
-   Star(double width, double height) : width(width), height(height)
+   Star(double width, double height)
    {
       initialize(width, height);
    }
@@ -30,8 +30,8 @@ public:
    {
       for (auto& star : stars)
       {
-         star.second += 1; // Increment phase
-         gout.drawStar(star.first, star.second); // Draw star at position with phase
+         star.second += 1;
+         gout.drawStar(star.first, star.second);
       }
    }
 
@@ -46,7 +46,7 @@ private:
    {
       std::mt19937 gen(rd()); // Random number generator
       std::uniform_real_distribution<> xDis(0.0, width); // Random x-coordinates
-      std::uniform_real_distribution<> yDis(0.0, height); // Random y-coordinates
+      std::uniform_real_distribution<> yDis(150.0, height); // Random y-coordinates
       std::uniform_int_distribution<> pDis(0, 256);      // Random phases
 
       for (int i = 0; i < 50; ++i) // Generate 50 stars
