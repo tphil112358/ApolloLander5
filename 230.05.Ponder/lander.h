@@ -28,7 +28,7 @@ class Lander
    friend TestLander;
 
 public:
-   Lander(const Position& posUpperRight) :pos(100,300), status(PLAYING), fuel(1000.0) {}
+   Lander(const Position& posUpperRight) :pos(350,350), status(PLAYING), fuel(1000.0) {}
 
    // reset the lander and its position
    void reset(const Position& posUpperRight);
@@ -84,7 +84,7 @@ public:
    }
 
    // draw the lander on the screen
-   void draw(const Thrust& thrust, ogstream& gout) const;
+   void draw(const Thrust& thrust, ogstream& gout, double elevation) const;
 
    // handle input
    Acceleration input(const Thrust& thrust, double gravity);
