@@ -57,7 +57,10 @@ void Simulator::display()
    ground.draw(gout);
 
    // draw the lander
-   lander.draw(thrust,gout);
+   lander.draw(thrust,gout, ground.getElevation(lander.getPosition()));
+
+   if (lander.isDead())
+      gout.drawYouDiedScreen();
 }
 
 
@@ -77,22 +80,24 @@ void callBack(const Interface* pUI, void* p)
    // handle input
    pSimulator->thrust.set(pUI);
 
-   // Run the physics
-   Acceleration acceleration = (pSimulator->lander.input(pSimulator->thrust, -1.0));
-   pSimulator->lander.coast(acceleration, 0.3);
-
    //Check for impact
-   if (pSimulator->ground.hitGround(pSimulator->lander.getPosition(), pSimulator->lander.getWidth()) == true)
+   if (pSimulator->lander.isFlying())
    {
-      if (pSimulator->ground.onPlatform(pSimulator->lander.getPosition(), pSimulator->lander.getWidth()) == true)
+      // Run the physics
+      Acceleration acceleration = (pSimulator->lander.input(pSimulator->thrust, -1.0));
+      pSimulator->lander.coast(acceleration, 0.3);
+      if (pSimulator->ground.hitGround(pSimulator->lander.getPosition(), pSimulator->lander.getWidth()) == true)
       {
-         if (pSimulator->lander.getSpeed() <= pSimulator->lander.getMaxSpeed())
-            pSimulator->lander.land();
+         if (pSimulator->ground.onPlatform(pSimulator->lander.getPosition(), pSimulator->lander.getWidth()) == true)
+         {
+            if (pSimulator->lander.getSpeed() <= pSimulator->lander.getMaxSpeed())
+               pSimulator->lander.land();
+            else
+               pSimulator->lander.crash();
+         }
          else
             pSimulator->lander.crash();
       }
-      else
-         pSimulator->lander.crash();
    }
 }
 
