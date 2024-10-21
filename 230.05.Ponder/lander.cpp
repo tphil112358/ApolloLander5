@@ -22,7 +22,7 @@ void Lander::reset(const Position& posUpperRight)
    angle.setDegrees(0.0);
    status = PLAYING;
    fuel = 5000.0;
-   velocity.setDX(random(-10,-4));
+   velocity.setDX(random(-10, -4));
    velocity.setDY(random(-2, 2));
    pos.setX(99);
    pos.setY(random(posUpperRight.getY() * .75, posUpperRight.getY() * .90));
@@ -33,22 +33,25 @@ void Lander::reset(const Position& posUpperRight)
  * DRAW
  * Draw the lander on the screen
  ***************************************************************/
-void Lander::draw(const Thrust& thrust, ogstream& gout, double elevation) const 
+void Lander::draw(const Thrust& thrust, ogstream& gout, double elevation) const
 {
    gout.setPosition(Position(20, 380));
    gout << "Fuel: " << fuel << "lbs\n";
    gout.precision(3);
-   gout << "Altitude: " << elevation << " m\n";
+   if (isFlying())
+      gout << "Altitude: " << elevation << " m\n";
+   else
+      gout << "Altitude: 0 m\n";
    gout << "Speed: " << velocity.getSpeed() << " m/s\n";
 
-   
-
    gout.drawLander(pos, angle.getRadians());     // Draw the Lander.
-   if (fuel >= 10) {
+
+   if (fuel > 0 && isFlying())
+   {
       gout.drawLanderFlames(pos, angle.getRadians(), thrust.isMain(), thrust.isCounter(), thrust.isClock());  // Draw the flames.
    }
-   
-   
+
+
 }
 
 /***************************************************************
@@ -58,7 +61,7 @@ void Lander::draw(const Thrust& thrust, ogstream& gout, double elevation) const
 Acceleration Lander::input(const Thrust& thrust, double gravity)
 {
    Acceleration a;
-   if (fuel > 0) 
+   if (fuel > 0)
    {
       if (thrust.isClock() == true)  // change the angle if the clockwise thruster is on.
       {
@@ -78,9 +81,9 @@ Acceleration Lander::input(const Thrust& thrust, double gravity)
          fuel -= 10;
       }
    }
-   if (isFlying()) 
+   if (isFlying())
       a.addDDY(gravity);
-   
+
    return a;
 }
 
