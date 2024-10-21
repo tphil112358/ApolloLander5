@@ -33,10 +33,21 @@ void Lander::reset(const Position& posUpperRight)
  * DRAW
  * Draw the lander on the screen
  ***************************************************************/
-void Lander::draw(const Thrust& thrust, ogstream& gout) const 
+void Lander::draw(const Thrust& thrust, ogstream& gout, double elevation) const 
 {
+   gout.setPosition(Position(20, 380));
+   gout << "Fuel: " << fuel << "lbs\n";
+   gout.precision(3);
+   gout << "Altitude: " << elevation << " m\n";
+   gout << "Speed: " << velocity.getSpeed() << " m/s\n";
+
+   
+
    gout.drawLander(pos, angle.getRadians());     // Draw the Lander.
-   gout.drawLanderFlames(pos, angle.getRadians(), thrust.isMain(), thrust.isCounter(), thrust.isClock());  // Draw the flames.
+   if (fuel >= 10) {
+      gout.drawLanderFlames(pos, angle.getRadians(), thrust.isMain(), thrust.isCounter(), thrust.isClock());  // Draw the flames.
+   }
+   
    
 }
 
@@ -59,7 +70,7 @@ Acceleration Lander::input(const Thrust& thrust, double gravity)
          angle.add(thrust.rotation());
          fuel -= 1;
       }
-      if (thrust.isMain() == true)  // if the main thrust is on, adjust the position.
+      if (thrust.isMain() == true && fuel >= 10)  // if the main thrust is on, adjust the position.
       {
          //long double dx = thrust.mainEngineThrust() * -(sin(angle.getRadians()));
          a.setDDX(thrust.mainEngineThrust() * -(sin(angle.getRadians())));
@@ -67,8 +78,9 @@ Acceleration Lander::input(const Thrust& thrust, double gravity)
          fuel -= 10;
       }
    }
-
-   a.addDDY(gravity);
+   if (isFlying()) 
+      a.addDDY(gravity);
+   
    return a;
 }
 
