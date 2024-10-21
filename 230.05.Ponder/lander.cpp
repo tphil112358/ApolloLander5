@@ -9,6 +9,7 @@
 
 #include "lander.h"
 #include "acceleration.h"
+#include <iostream> // TEMP
 
 #include <math.h>  // for cos() and sin()
 
@@ -16,29 +17,57 @@
   * RESET
   * Reset the lander and its position to start the game over
   ***************************************************************/
-void Lander :: reset(const Position & posUpperRight)
+void Lander::reset(const Position& posUpperRight)
 {
-   status = DEAD;
+   angle.setDegrees(0.0);
+   status = PLAYING;
+   fuel = 5000.0;
+   velocity.setDX(random(-10,-4));
+   velocity.setDY(random(-2, 2));
+   pos.setX(99);
+   pos.setY(random(posUpperRight.getY() * .75, posUpperRight.getY() * .90));
+
 }
 
 /***************************************************************
  * DRAW
  * Draw the lander on the screen
  ***************************************************************/
-void Lander :: draw(const Thrust & thrust, ogstream & gout) const {}
+void Lander::draw(const Thrust& thrust, ogstream& gout) const 
+{
+   gout.drawLander(pos, angle.getRadians());     // Draw the Lander.
+   gout.drawLanderFlames(pos, angle.getRadians(), thrust.isMain(), thrust.isCounter(), thrust.isClock());  // Draw the flames.
+   
+}
 
 /***************************************************************
  * INPUT
  * Accept input from the Neil Armstrong
  ***************************************************************/
-Acceleration Lander :: input(const Thrust& thrust, double gravity)
+Acceleration Lander::input(const Thrust& thrust, double gravity)
 {
    Acceleration a;
-   if (thrust.isMain() == true)
+   if (fuel > 0) 
    {
-      a.addDDX(thrust.mainEngineThrust() * sin(angle.getRadians()));
-      a.addDDY(thrust.mainEngineThrust() * cos(angle.getRadians()));
+      if (thrust.isClock() == true)  // change the angle if the clockwise thruster is on.
+      {
+         angle.add(thrust.rotation());
+         fuel -= 1;
+      }
+      if (thrust.isCounter() == true)  // change the angle if the counter-clockwise thruster is on.
+      {
+         angle.add(thrust.rotation());
+         fuel -= 1;
+      }
+      if (thrust.isMain() == true)  // if the main thrust is on, adjust the position.
+      {
+         //long double dx = thrust.mainEngineThrust() * -(sin(angle.getRadians()));
+         a.setDDX(thrust.mainEngineThrust() * -(sin(angle.getRadians())));
+         a.addDDY(thrust.mainEngineThrust() * cos(angle.getRadians()));
+         fuel -= 10;
+      }
    }
+
    a.addDDY(gravity);
    return a;
 }
@@ -47,7 +76,9 @@ Acceleration Lander :: input(const Thrust& thrust, double gravity)
  * COAST
  * What happens when we coast?
  *******************************************************************/
-void Lander :: coast(Acceleration & acceleration, double time)
+void Lander::coast(Acceleration& acceleration, double time)
 {
-   pos.add(acceleration, velocity, time);
+   pos.add(acceleration, velocity, time);         // update the position.
+   velocity.addDX(acceleration.getDDX() * time);  // update the velocity.
+   velocity.addDY(acceleration.getDDY() * time);
 }
