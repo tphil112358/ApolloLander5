@@ -30,10 +30,10 @@ using std::max;
 class ogstream : public std::ostringstream
 {
 public:
-   ogstream()                    : pos()    {          }
+   ogstream() : pos() {          }
    ogstream(const Position& pos) : pos(pos) {          }
-   ~ogstream()                              { flush(); }
-   
+   ~ogstream() { flush(); }
+
    // Methods specific to drawing text on the screen
    void flush();
    void setPosition(const Position& pos) { flush(); this->pos = pos; }
@@ -42,53 +42,50 @@ public:
       setPosition(pos);
       return *this;
    }
-   
+
    // Methods specific to drawing simulator elements on the screen
-   virtual void drawLander(      const Position& pos = Position(),
-                                 double angle = 0.0);
+   virtual void drawLander(const Position& pos = Position(),
+      double angle = 0.0);
 
    virtual void drawLanderFlames(const Position& pos = Position(),
-                                 double angle = 0.0,
-                                 bool bottom = false,
-                                 bool left   = false,
-                                 bool right  = false);
+      double angle = 0.0,
+      bool bottom = false,
+      bool left = false,
+      bool right = false);
 
-   virtual void drawStar(        const Position& pt = Position(),
-                                 unsigned char phase = 0);
+   virtual void drawStar(const Position& pt = Position(),
+      unsigned char phase = 0);
 
-   virtual void drawRectangle(   const Position & posBegin,
-                                 const Position & posEnd,
-                                 double red    = 1.0,
-                                 double green  = 1.0,
-                                 double blue   = 1.0) const;
+   virtual void drawRectangle(const Position& posBegin,
+      const Position& posEnd,
+      double red = 1.0,
+      double green = 1.0,
+      double blue = 1.0) const;
 
-   virtual void drawLine(        const Position & posBegin,
-                                 const Position & posEnd,
-                                 double red   = 1.0,
-                                 double green = 1.0,
-                                 double blue  = 1.0) const;
+   virtual void drawLine(const Position& posBegin,
+      const Position& posEnd,
+      double red = 1.0,
+      double green = 1.0,
+      double blue = 1.0) const;
 
-   virtual void drawYouDiedScreen(const Position& pos);
+   virtual void drawYouDiedScreen();
+
 protected:
    Position pos;
-   
-private:
-   Position rotate(const Position & posOrigin, double x, double y,
-                   double rotation = 0.0) const;
-   
-   void drawText(const Position & posTopLeft, const char * text) const;
-   
 
+private:
+   Position rotate(const Position& posOrigin, double x, double y,
+      double rotation = 0.0) const;
+
+   void drawText(const Position& posTopLeft, const char* text) const;
 };
 
 /******************************************************************
  * RANDOM
  * This function generates a random number.  The user specifies
- * The parameters 
+ * The parameters
  *    INPUT:   min, max : The number of values (min <= num <= max)
  *    OUTPUT   <return> : Return the integer
  ****************************************************************/
 int    random(int    min, int    max);
 double random(double min, double max);
-
-
