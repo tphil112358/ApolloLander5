@@ -59,7 +59,7 @@ struct PT
  * GL VERTEXT POINT
  * Just a more convenient format of glVertext2f
  *************************************************************************/
-inline void glVertexPoint(const Position & pos)
+inline void glVertexPoint(const Position& pos)
 {
    glVertex2f((GLfloat)pos.getX(), (GLfloat)pos.getY());
 }
@@ -102,15 +102,15 @@ void ogstream::flush()
  *   INPUT  topLeft   The top left corner of the text
  *          text      The text to be displayed
  ************************************************************************/
-void ogstream :: drawText(const Position & posTopLeft, const char * text) const
+void ogstream::drawText(const Position& posTopLeft, const char* text) const
 {
-   void *pFont = GLUT_TEXT;
+   void* pFont = GLUT_TEXT;
 
    // prepare to draw the text from the top-left corner
    glRasterPos2f((GLfloat)posTopLeft.getX(), (GLfloat)posTopLeft.getY());
 
    // loop through the text
-   for (const char *p = text; *p; p++)
+   for (const char* p = text; *p; p++)
       glutBitmapCharacter(pFont, *p);
 }
 
@@ -120,12 +120,12 @@ void ogstream :: drawText(const Position & posTopLeft, const char * text) const
  *   INPUT  POINT     The position of the beginning of the star
  *          PHASE     The phase of the twinkling
  *************************************************************************/
-void ogstream :: drawStar(const Position & pos, unsigned char phase) 
+void ogstream::drawStar(const Position& pos, unsigned char phase)
 {
    // use the current point if the default parameter is used
    if (pos != Position())
       *this = pos;
-   
+
    // Get ready...
 
    // most of the time, it is just a pale yellow dot
@@ -192,8 +192,8 @@ void ogstream :: drawStar(const Position & pos, unsigned char phase)
  *   INPUT  begin     The position of the beginning of the line
  *          end       The position of the end of the line
  *************************************************************************/
-void ogstream :: drawLine(const Position & posBegin, const Position & posEnd,
-                          double red, double green, double blue) const
+void ogstream::drawLine(const Position& posBegin, const Position& posEnd,
+   double red, double green, double blue) const
 {
    // Get ready...
    glBegin(GL_LINES);
@@ -214,19 +214,19 @@ void ogstream :: drawLine(const Position & posBegin, const Position & posEnd,
  *   INPUT  begin     The position of the beginning of the rectangle
  *          end       The position of the end of the rectangle
  *************************************************************************/
-void ogstream :: drawRectangle(const Position & posBegin, const Position & posEnd,
-                               double red, double green, double blue) const
+void ogstream::drawRectangle(const Position& posBegin, const Position& posEnd,
+   double red, double green, double blue) const
 {
    // Get ready...
    glBegin(GL_QUADS);
    glColor3f((GLfloat)red, (GLfloat)green, (GLfloat)blue);
-   
+
    // Draw the actual line
    glVertex2f((GLfloat)posBegin.getX(), (GLfloat)posBegin.getY());
-   glVertex2f((GLfloat)posBegin.getX(), (GLfloat)posEnd.getY()  );
-   glVertex2f((GLfloat)posEnd.getX(),   (GLfloat)posEnd.getY()  );
-   glVertex2f((GLfloat)posEnd.getX(),   (GLfloat)posBegin.getY());
-   
+   glVertex2f((GLfloat)posBegin.getX(), (GLfloat)posEnd.getY());
+   glVertex2f((GLfloat)posEnd.getX(), (GLfloat)posEnd.getY());
+   glVertex2f((GLfloat)posEnd.getX(), (GLfloat)posBegin.getY());
+
    // Complete drawing
    glColor3f((GLfloat)1.0 /* red % */, (GLfloat)1.0 /* green % */, (GLfloat)1.0 /* blue % */);
    glEnd();
@@ -236,22 +236,22 @@ void ogstream :: drawRectangle(const Position & posBegin, const Position & posEn
  * DRAW Lander
  * Draw a moon-lander spaceship on the screen at a given point
  ***********************************************************************/
-void ogstream :: drawLander(const Position& pos, double angle)
+void ogstream::drawLander(const Position& pos, double angle)
 {
    // use the current point if the default parameter is used
    if (pos != Position())
       *this = pos;
-   
+
    //
    // Landing legs
    //
    glBegin(GL_LINE_STRIP);
    PT ptsLegs[] =
    {
-      {-10,0}, {-6,0}, {-9,1}, {-9,8}, {-5,3}, {-9,8}, {-5,6}, 
+      {-10,0}, {-6,0}, {-9,1}, {-9,8}, {-5,3}, {-9,8}, {-5,6},
       {5,6},   {9,8},  {5,3},  {9,8},  {9,1},  {6,0},  {10,0}
    };
-   glColor3f((GLfloat)1.0 , (GLfloat)1.0, (GLfloat)1.0);
+   glColor3f((GLfloat)1.0, (GLfloat)1.0, (GLfloat)1.0);
    for (int i = 0; i < sizeof(ptsLegs) / sizeof(PT); i++)
       glVertexPoint(rotate(pos, ptsLegs[i].x, ptsLegs[i].y, angle));
    glEnd();
@@ -287,7 +287,7 @@ void ogstream :: drawLander(const Position& pos, double angle)
    PT ptsCenter[] =
    {
       {0,10},
-      {3,7}, {-3, 7}, {-5,9}, {-5,12}, {-3, 16}, 
+      {3,7}, {-3, 7}, {-5,9}, {-5,12}, {-3, 16},
       {3,16}, {5,12}, {5,9}, {3,7}
    };
    glColor3f((GLfloat)0.7, (GLfloat)0.7, (GLfloat)0.7);
@@ -306,7 +306,7 @@ void ogstream :: drawLander(const Position& pos, double angle)
    // storage units
    glColor3f((GLfloat)0.92, (GLfloat)0.92, (GLfloat)0.92);
    glBegin(GL_QUADS);
-   glVertexPoint(rotate(pos, -1, 7 , angle));
+   glVertexPoint(rotate(pos, -1, 7, angle));
    glVertexPoint(rotate(pos, -5, 10, angle));
    glVertexPoint(rotate(pos, -5, 12, angle));
    glVertexPoint(rotate(pos, -1, 12, angle));
@@ -319,23 +319,23 @@ void ogstream :: drawLander(const Position& pos, double angle)
  * DRAW Lander Flame
  * Draw the flames coming out of a moonlander for thrust
  ***********************************************************************/
-void ogstream :: drawLanderFlames(const Position & pos, double angle, 
-                                  bool bottom,
-                                  bool clockwise,
-                                  bool counterClockwise)
+void ogstream::drawLanderFlames(const Position& pos, double angle,
+   bool bottom,
+   bool clockwise,
+   bool counterClockwise)
 {
    // use the current point if the default parameter is used
    if (pos != Position())
       *this = pos;
-   
+
    // bottom thrust
    if (bottom)
    {
       glBegin(GL_TRIANGLES);
-      glColor3f(1.0 /* red % */, 0.0 /* green % */, 0.0 /* blue % */);     
+      glColor3f(1.0 /* red % */, 0.0 /* green % */, 0.0 /* blue % */);
       glVertexPoint(rotate(pos, -3, 1, angle));
       glVertexPoint(rotate(pos, random(-5.0, 5.0), random(-15.0, -5.0), angle));
-      glVertexPoint(rotate(pos,  3, 1, angle));
+      glVertexPoint(rotate(pos, 3, 1, angle));
       glVertexPoint(rotate(pos, -3, 1, angle));
       glVertexPoint(rotate(pos, random(-5.0, 5.0), random(-15.0, -5.0), angle));
       glVertexPoint(rotate(pos, 3, 1, angle));
@@ -384,8 +384,8 @@ void ogstream :: drawLanderFlames(const Position & pos, double angle,
  *           rotation Rotation in degrees
  *    OUTPUT point    The new position
  *************************************************************************/
-Position ogstream :: rotate(const Position& posOrigin,
-                            double x, double y, double rotation) const
+Position ogstream::rotate(const Position& posOrigin,
+   double x, double y, double rotation) const
 {
    // the only element that rotates is the lunar landar
    // and it has the center of rotation at (0, 8)
@@ -400,7 +400,7 @@ Position ogstream :: rotate(const Position& posOrigin,
 
    // start with our original point
    Position posReturn(posOrigin);
-   
+
    // find the new values
    posReturn.addX(x * cosA - y * sinA + xOffset /*center of rotation*/);
    posReturn.addY(y * cosA + x * sinA + yOffset /*center of rotation*/);
@@ -410,7 +410,7 @@ Position ogstream :: rotate(const Position& posOrigin,
 
 /******************************************************************
  * RANDOM
- * This function generates a random number.  
+ * This function generates a random number.
  *
  *    INPUT:   min, max : The number of values (min <= num <= max)
  *    OUTPUT   <return> : Return the integer
@@ -426,7 +426,7 @@ int random(int min, int max)
 
 /******************************************************************
  * RANDOM
- * This function generates a random number.  
+ * This function generates a random number.
  *
  *    INPUT:   min, max : The number of values (min <= num <= max)
  *    OUTPUT   <return> : Return the double
@@ -435,7 +435,7 @@ double random(double min, double max)
 {
    assert(min <= max);
    double num = min + ((double)rand() / (double)RAND_MAX * (max - min));
-   
+
    assert(min <= num && num <= max);
 
    return num;
@@ -446,7 +446,7 @@ double random(double min, double max)
  * Draw a "You Died" screen in Dark Souls style
  *   INPUT  pos       The position to start drawing the text
  *************************************************************************/
-void ogstream :: drawYouDiedScreen(const Position& pos)
+void ogstream::drawYouDiedScreen()
 {
    // Set the color to red
    glColor3f(1.0f, 0.0f, 0.0f);
@@ -455,7 +455,9 @@ void ogstream :: drawYouDiedScreen(const Position& pos)
    void* pFont = GLUT_BITMAP_TIMES_ROMAN_24;
 
    // Prepare to draw the text from the specified position
-   glRasterPos2f((GLfloat)pos.getX(), (GLfloat)pos.getY());
+   glRasterPos2f((GLfloat)145.0, (GLfloat)215.0);
+
+   drawRectangle(Position(0.0, 200.0),Position(400.0,250.0),0 /*red*/, 0 /*green*/, 0 /*blue*/);
 
    // The text to be displayed
    const char* text = "YOU DIED";
@@ -464,7 +466,3 @@ void ogstream :: drawYouDiedScreen(const Position& pos)
    for (const char* p = text; *p; p++)
       glutBitmapCharacter(pFont, *p);
 }
-
-
-
-
