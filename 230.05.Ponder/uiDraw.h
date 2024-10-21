@@ -67,6 +67,8 @@ public:
                                  double red   = 1.0,
                                  double green = 1.0,
                                  double blue  = 1.0) const;
+
+   virtual void drawYouDiedScreen(const Position& pos);
 protected:
    Position pos;
    
@@ -75,6 +77,7 @@ private:
                    double rotation = 0.0) const;
    
    void drawText(const Position & posTopLeft, const char * text) const;
+   
 
 };
 
@@ -87,4 +90,5 @@ private:
  ****************************************************************/
 int    random(int    min, int    max);
 double random(double min, double max);
+
 
