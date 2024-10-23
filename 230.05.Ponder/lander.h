@@ -96,7 +96,6 @@ public:
    void land()
    {
       angle.setDegrees(0.0);
-      velocity.set(0.0, 0.0);
       status = SAFE;
    }
 
@@ -104,7 +103,6 @@ public:
    void crash()
    {
       angle.setRadians(M_PI);
-      velocity.set(M_PI, 0.0);
       status = DEAD; // Stretch goal; insert Dark Souls 'YOU DIED' display code here
    }
 

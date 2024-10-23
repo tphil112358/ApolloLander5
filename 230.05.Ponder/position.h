@@ -1,6 +1,6 @@
 /***********************************************************************
  * Header File:
- *    POSITION
+ *    POSITION 
  * Author:
  *    Br. Helfrich
  * Summary:
@@ -23,11 +23,11 @@ class Position
 {
    friend TestPosition;    // for the unit tests
    friend TestLander;      // for the unit tests
-
+   
 public:
    // constructors
-   Position() : x(0.0), y(0.0) {}
-   Position(const Position& pos) : x(pos.getX()), y(pos.getY()) {}
+   Position()                     : x(0.0), y(0.0) {}
+   Position(const Position & pos) : x(pos.getX()), y(pos.getY()) {}
    Position(double x, double y) : x(x), y(y) {}
 
    // getters
@@ -41,38 +41,43 @@ public:
       return y;
    }
 
-   bool operator == (const Position& rhs) const
+   bool operator < (const Position& other) const
+   {
+      return x < other.x || (x == other.x && y < other.y);
+   }
+
+   bool operator == (const Position & rhs) const
    {
       return rhs.getX() == x && rhs.getY() == y;
    }
 
-   bool operator != (const Position& rhs) const
+   bool operator != (const Position & rhs) const
    {
       return rhs.getX() != x || rhs.getY() != y;
    }
 
    // setters
-   void setX(double x)
+   void setX(double x) 
    {
       this->x = x;
    }
 
-   void setY(double y)
+   void setY(double y) 
    {
       this->y = y;
    }
 
-   void addX(double x)
+   void addX(double x) 
    {
       this->x += x;
    }
 
-   void addY(double y)
+   void addY(double y) 
    {
       this->y += y;
    }
 
-   void add(const Acceleration& a, const Velocity& v, double t);
+   void add (const Acceleration & a, const Velocity & v, double t);
 
    Position& operator = (const Position& rhs)
    {
@@ -85,3 +90,4 @@ private:
    double x;           // horizontal position
    double y;           // vertical position
 };
+

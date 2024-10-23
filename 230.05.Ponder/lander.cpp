@@ -51,7 +51,11 @@ void Lander::draw(const Thrust& thrust, ogstream& gout, double elevation) const
       gout.drawLanderFlames(pos, angle.getRadians(), thrust.isMain(), thrust.isCounter(), thrust.isClock());  // Draw the flames.
    }
 
-
+   if (isLanded())
+   {
+      gout.setPosition(Position(130, 300));
+      gout << "The Eagle Has Landed\n";
+   }
 }
 
 /***************************************************************
@@ -61,7 +65,7 @@ void Lander::draw(const Thrust& thrust, ogstream& gout, double elevation) const
 Acceleration Lander::input(const Thrust& thrust, double gravity)
 {
    Acceleration a;
-   if (fuel > 0)
+   if (fuel > 10)
    {
       if (thrust.isClock() == true)  // change the angle if the clockwise thruster is on.
       {
@@ -75,13 +79,15 @@ Acceleration Lander::input(const Thrust& thrust, double gravity)
       }
       if (thrust.isMain() == true && fuel >= 10)  // if the main thrust is on, adjust the position.
       {
-         //long double dx = thrust.mainEngineThrust() * -(sin(angle.getRadians()));
          a.setDDX(thrust.mainEngineThrust() * -(sin(angle.getRadians())));
          a.addDDY(thrust.mainEngineThrust() * cos(angle.getRadians()));
          fuel -= 10;
       }
    }
-   if (isFlying())
+   else
+      fuel = 0;
+
+   if (isFlying()) // Don't apply gravity once the lander is on the surface
       a.addDDY(gravity);
 
    return a;
@@ -93,7 +99,10 @@ Acceleration Lander::input(const Thrust& thrust, double gravity)
  *******************************************************************/
 void Lander::coast(Acceleration& acceleration, double time)
 {
-   pos.add(acceleration, velocity, time);         // update the position.
-   velocity.addDX(acceleration.getDDX() * time);  // update the velocity.
-   velocity.addDY(acceleration.getDDY() * time);
+   if (isFlying())
+   {
+      pos.add(acceleration, velocity, time);         // update the position.
+      velocity.addDX(acceleration.getDDX() * time);  // update the velocity.
+      velocity.addDY(acceleration.getDDY() * time);
+   }
 }
